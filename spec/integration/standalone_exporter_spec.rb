@@ -48,6 +48,17 @@ RSpec.describe "Standalone Prometheus Exporter" do
     expect(res.body).to match(/^# TYPE puma_workers gauge/)
   end
 
+  it 'serves metrics after 2 phased restarts' do
+    Process.kill("USR1", @pid)
+    sleep 0.5
+    res = get 9394, "/metrics"
+    expect(res.body).to match(/^# TYPE puma_workers gauge/)
+    Process.kill("USR1", @pid)
+    sleep 0.5
+    res = get 9394, "/metrics"
+    expect(res.body).to match(/^# TYPE puma_workers gauge/)
+  end
+
   def get(port, path = "/")
     retries = 3
     begin

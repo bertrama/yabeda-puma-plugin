@@ -78,8 +78,8 @@ Puma::Plugin.create do
       events.on_restart do
         logger.log "* Restarting #{banner}"
         server.stop(true)
-        server, logger = create_server.call
-        server.run
+        server = nil
+        logger = nil
       end
 
     else
